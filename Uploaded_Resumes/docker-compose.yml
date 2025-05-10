@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  satish:
+    image: atuly9372/satish-pro:v3
+    container_name: satish_project_con
+    command: sh -c "cd /satish/Smart_Resume_Analyser_App && streamlit run App.py"
+    volumes:
+      - ./Smart_Resume_Analyser_App:/satish/Smart_Resume_Analyser_App
+      - ./Uploaded_Resumes:/satish/Smart_Resume_Analyser_App/Uploaded_Resumes
+    depends_on:
+      - mysql57
+    ports:
+      - "8501:8501"  # streamlit default port
+    networks:
+      - mynetwork
+
+  mysql57:
+    image: atuly9372/mysql:5.7
+    container_name: satish_project_con_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: sra
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypass
+
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
